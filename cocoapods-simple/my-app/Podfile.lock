@@ -1,0 +1,74 @@
+PODS:
+  - expat (2.1)
+  - FFmpeg (2.8.3):
+    - FFmpeg/precompiled (= 2.8.3)
+  - FFmpeg/precompiled (2.8.3)
+  - freetype (2.6.4)
+  - ImageMagick (6.8.8-9):
+    - ImageMagick/jpeg (= 6.8.8-9)
+    - ImageMagick/png (= 6.8.8-9)
+    - ImageMagick/tiff (= 6.8.8-9)
+    - ImageMagick/wand (= 6.8.8-9)
+  - ImageMagick/jpeg (6.8.8-9)
+  - ImageMagick/png (6.8.8-9)
+  - ImageMagick/tiff (6.8.8-9)
+  - ImageMagick/wand (6.8.8-9)
+  - Mosquitto (1.4.8):
+    - Mosquitto/TLS (= 1.4.8)
+    - Mosquitto/WithoutTLS (= 1.4.8)
+  - Mosquitto/TLS (1.4.8):
+    - OpenSSL-Universal (~> 1.0.1.19)
+  - Mosquitto/WithoutTLS (1.4.8)
+  - OpenSSL (1.0.0):
+    - OpenSSL/ssl (= 1.0.0)
+  - OpenSSL-Universal (1.0.1.20)
+  - OpenSSL/crypto (1.0.0)
+  - OpenSSL/ssl (1.0.0):
+    - OpenSSL/crypto
+  - sqlite3 (3.25.3):
+    - sqlite3/common (= 3.25.3)
+  - sqlite3/common (3.25.3)
+  - sqlite3/fts (3.25.3):
+    - sqlite3/common
+  - sqlite3/fts5 (3.25.3):
+    - sqlite3/common
+  - zziplib (0.13.62)
+
+DEPENDENCIES:
+  - expat (= 2.1)
+  - FFmpeg (= 2.8.3)
+  - freetype (= 2.6.4)
+  - ImageMagick (= 6.8.8-9)
+  - Mosquitto (= 1.4.8)
+  - OpenSSL (= 1.0.0)
+  - sqlite3 (= 3.25.3)
+  - sqlite3/fts
+  - sqlite3/fts5
+  - zziplib (= 0.13.62)
+
+SPEC REPOS:
+  trunk:
+    - expat
+    - FFmpeg
+    - freetype
+    - ImageMagick
+    - Mosquitto
+    - OpenSSL
+    - OpenSSL-Universal
+    - sqlite3
+    - zziplib
+
+SPEC CHECKSUMS:
+  expat: 4cca2d53af2e3ac99ded76dd6daa8cc618fc627b
+  FFmpeg: f1428c3b60b5f9e349fcd5d7878705cd7f9a26f6
+  freetype: f1607aa45440e7cc17c85c32e901f32b7b801fad
+  ImageMagick: e8c089d133679d505c98dc97f3dc5be0e706e1df
+  Mosquitto: d5070269b43acc98e4a8272b9e08b73d5de86a5c
+  OpenSSL: ab573467a279df36f54ea68e506be6aea8178f27
+  OpenSSL-Universal: 71f2c4b2ae758e2218090f905e95ca0ac5c01be7
+  sqlite3: 2d1742c206acbabc99593666bd359b19223ee0d8
+  zziplib: 2dac36c0d81aa09a22bd14856c2117f80c2eb388
+
+PODFILE CHECKSUM: 19b051e90af23702ed80765b56d9a82df23ff285
+
+COCOAPODS: 1.8.1

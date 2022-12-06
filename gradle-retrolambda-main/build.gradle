@@ -1,0 +1,21 @@
+allprojects {
+    group = project.property('group')
+    version = project.property('version')
+    ext.androidPluginVersion = project.property('androidPluginVersion')
+}
+
+task test {
+    dependsOn gradle.includedBuild('gradle-retrolambda').task(':test')
+}
+
+task install {
+    dependsOn gradle.includedBuild('gradle-retrolambda').task(':install')
+}
+
+task publish {
+    dependsOn gradle.includedBuild('gradle-retrolambda').task(':publish')
+}
+
+task publishPlugins {
+    dependsOn gradle.includedBuild('gradle-retrolambda').task(':publishPlugins')
+}

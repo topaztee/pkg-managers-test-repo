@@ -1,0 +1,15 @@
+Paket.Core
+VSSDK.DTE.8
+VSSDK.DTE.9
+VSSDK.DTE.10
+VSSDK.GraphModel.12
+VSSDK.Language.12
+VSSDK.Editor.12
+VSSDK.ComponentModelHost.12
+VSSDK.Shell.12
+VSSDK.Shell.Interop.12
+Microsoft.VisualStudio.Sdk.BuildTasks.14.0
+reactiveui
+reactiveui-events
+MahApps.Metro
+FSharp.Core

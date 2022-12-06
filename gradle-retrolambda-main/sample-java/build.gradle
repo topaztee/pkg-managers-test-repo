@@ -1,0 +1,33 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "me.tatarka:gradle-retrolambda:${rootProject.version}"
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'me.tatarka.retrolambda'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+}
+
+mainClassName = "me.tatarka.retrolambda.sample.Main"
+
+jar {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+}
+
+retrolambda {
+    javaVersion JavaVersion.VERSION_1_6
+}

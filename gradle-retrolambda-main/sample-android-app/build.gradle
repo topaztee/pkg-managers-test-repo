@@ -1,0 +1,88 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.google.com' }
+        jcenter()
+    }
+
+    dependencies {
+        classpath "com.android.tools.build:gradle:$androidPluginVersion"
+        classpath "me.tatarka:gradle-retrolambda:$version"
+    }
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+
+repositories {
+    google()
+    jcenter()
+}
+
+dependencies {
+    implementation project(':sample-android-lib')
+    implementation project(':sample-android-feature')
+
+    implementation 'com.google.dagger:dagger:2.6'
+    annotationProcessor "com.google.dagger:dagger-compiler:2.6"
+    compileOnly 'javax.annotation:jsr250-api:1.0'
+
+    api 'com.android.support:appcompat-v7:26.0.0'
+
+    androidTestImplementation  'com.android.support:support-annotations:26.0.0'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'org.assertj:assertj-core:2.5.0'
+
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.assertj:assertj-core:2.5.0'
+    testImplementation 'org.mockito:mockito-core:2.0.23-beta'
+}
+
+android {
+    compileSdkVersion 26
+
+    defaultConfig {
+        applicationId "me.tatarka.retrolambda.sample.app"
+        minSdkVersion 15
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        debug {
+            testCoverageEnabled true
+        }
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    packagingOptions {
+        exclude 'LICENSE'
+        exclude 'LICENSE.txt'
+    }
+
+    flavorDimensions "price"
+
+    productFlavors {
+        free {
+            dimension "price"
+        }
+        paid {
+            dimension "price"
+        }
+    }
+}
+
+retrolambda {
+    javaVersion JavaVersion.VERSION_1_7
+}

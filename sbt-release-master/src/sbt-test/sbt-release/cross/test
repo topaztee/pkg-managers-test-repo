@@ -1,0 +1,20 @@
+$ exec git init .
+
+> update
+
+$ exec git add .
+$ exec git commit -m init
+
+> reload
+
+> release with-defaults
+$ exists target/scala-2.11
+-$ exists target/scala-2.10
+
+> clean
+-$ exists target/scala-2.11
+-$ exists target/scala-2.10
+
+> release with-defaults cross
+$ exists target/scala-2.11
+$ exists target/scala-2.10

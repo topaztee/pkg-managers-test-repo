@@ -1,0 +1,693 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <Import Project="..\..\packages\Microsoft.VisualStudio.Sdk.BuildTasks.14.0\build\Microsoft.VisualStudio.Sdk.BuildTasks.14.0.props" Condition="Exists('..\..\packages\Microsoft.VisualStudio.Sdk.BuildTasks.14.0\build\Microsoft.VisualStudio.Sdk.BuildTasks.14.0.props')" Label="Paket" />
+  <Import Project="..\..\packages\FSharp.Compiler.Tools\build\FSharp.Compiler.Tools.props" Condition="Exists('..\..\packages\FSharp.Compiler.Tools\build\FSharp.Compiler.Tools.props')" Label="Paket" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion Condition="'$(VisualStudioVersion)' != ''">$(VisualStudioVersion)</MinimumVisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <VsixType>v3</VsixType>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{02140F7C-6F20-4FB5-89FD-4C283B44BAEE}</ProjectGuid>
+    <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Paket.VisualStudio</RootNamespace>
+    <AssemblyName>Paket.VisualStudio</AssemblyName>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <StartAction>Program</StartAction>
+    <StartProgram>$(DevEnvDir)devenv.exe</StartProgram>
+    <StartArguments>/rootsuffix Exp</StartArguments>
+    <ReferencePath>$(ReferencePath);$(MSBuildThisFileDirectory)..\References</ReferencePath>
+    <StartWorkingDirectory>$(DevEnvDir)</StartWorkingDirectory>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <!-- 
+          When building in AppVeyor do not attempt to deploy the extension as it 
+          will fail and trigger a build error 
+     -->
+    <DeployExtension Condition="'$(AppVeyor)' != ''">False</DeployExtension>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CopyVsixExtensionFiles>False</CopyVsixExtensionFiles>
+    <CreateVsixContainer>True</CreateVsixContainer>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CreateVsixContainer>True</CreateVsixContainer>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="APIToken.cs" />
+    <Compile Include="GeneralOptionsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GeneralOptionsControl.Designer.cs">
+      <DependentUpon>GeneralOptionsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IntelliSense\Classifier\PaketLockClassifierProvider.cs" />
+    <Compile Include="IntelliSense\Classifier\PaketLockClassifier.cs" />
+    <Compile Include="IntelliSense\CompletionProviders\SimpleOptionCompletionListProvider.cs" />
+    <Compile Include="LockFile\LockFileTaggerProvider.cs" />
+    <Compile Include="LockFile\GroupOutline.cs" />
+    <Compile Include="LockFile\LockFileTagger.cs" />
+    <Compile Include="PaketOptions.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Commands\AddPackageProcess.cs" />
+    <Compile Include="Commands\CommandIDs.cs" />
+    <Compile Include="Commands\PackageGui\AddPackage.xaml.cs">
+      <DependentUpon>AddPackage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Commands\PackageGui\AddPackageViewModel.cs" />
+    <Compile Include="Commands\PackageGui\Converters\LoadingSuccessFailureVisibilityConverter.cs" />
+    <Compile Include="IntelliSense\CompletionProviders\InstalledNuGetNameCompletionListProvider.cs" />
+    <Compile Include="Restore\AutoRestorer.cs" />
+    <Compile Include="Restore\ErrorReportRestorer.cs" />
+    <Compile Include="Restore\IPackageRestorer.cs" />
+    <Compile Include="Restore\OutputPaneRestorer.cs" />
+    <Compile Include="Restore\PackageRestorer.cs" />
+    <Compile Include="PaketFileContentType.cs" />
+    <Compile Include="PaketSettings.cs" />
+    <Compile Include="Restore\PaketRestorer.cs" />
+    <Compile Include="Restore\RestoringProject.cs" />
+    <Compile Include="Restore\WaitDialogRestorer.cs" />
+    <Compile Include="Utils\Config.cs" />
+    <Compile Include="Utils\DisposableHelpers.cs" />
+    <Compile Include="EditorExtensions\CommandTargetBase.cs" />
+    <Compile Include="EditorExtensions\CommentCommandTarget.cs" />
+    <Compile Include="EditorExtensions\Disposable.cs" />
+    <Compile Include="EditorExtensions\DteUtils.cs" />
+    <Compile Include="Guids.cs" />
+    <Compile Include="IntelliSense\Classifier\PaketClassificationTypes.cs" />
+    <Compile Include="IntelliSense\Classifier\PaketDependenciesClassifier.cs" />
+    <Compile Include="IntelliSense\Classifier\PaketDependenciesClassifierProvider.cs" />
+    <Compile Include="IntelliSense\CompletionContext.cs" />
+    <Compile Include="IntelliSense\CompletionContextType.cs" />
+    <Compile Include="IntelliSense\CompletionEngine.cs" />
+    <Compile Include="IntelliSense\CompletionEntry.cs" />
+    <Compile Include="IntelliSense\CompletionProviders\NuGetNameCompletionListProvider.cs" />
+    <Compile Include="IntelliSense\CompletionProviders\PaketKeywordCompletionListProvider.cs" />
+    <Compile Include="IntelliSense\CompletionProviders\SourceCompletionListProvider.cs" />
+    <Compile Include="IntelliSense\PaketCompletionController.cs" />
+    <Compile Include="IntelliSense\ICompletionListProvider.cs" />
+    <Compile Include="IntelliSense\PaketCompletionSourceProvider.cs" />
+    <Compile Include="StatusBarService.cs" />
+    <Compile Include="TextSpanHelper.cs" />
+    <Compile Include="PaketErrorPane.cs" />
+    <Compile Include="PaketOutputPane.cs" />
+    <Compile Include="IntelliSense\PaketDocument.cs" />
+    <Compile Include="PaketMetadata.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="PaketPackage.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SolutionExplorer\SolutionExplorerExtensions.cs" />
+    <Compile Include="SolutionExplorer\ActiveGraphNodeTracker.cs" />
+    <Compile Include="SolutionExplorer\GraphIcons.cs" />
+    <Compile Include="SolutionExplorer\GraphNodeExtensions.cs" />
+    <Compile Include="SolutionExplorer\PaketGraphProvider.cs" />
+    <Compile Include="SolutionExplorer\PaketGraphSchema.cs" />
+    <Compile Include="SolutionExplorer\PaketMenuCommandService.cs" />
+    <Compile Include="Utils\DteHelper.cs" />
+    <Compile Include="Utils\PaketLauncher.cs" />
+    <Compile Include="Utils\StringExtensions.cs" />
+    <Content Include="..\..\RELEASE_NOTES.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\..\docs\files\img\preview.png">
+      <Link>preview.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <None Include="Resources\paket.bootstrapper.exe" />
+    <Resource Include="Commands\PackageGui\Resources\logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <EmbeddedResource Include="GeneralOptionsControl.resx">
+      <DependentUpon>GeneralOptionsControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VSPackage.resx">
+      <MergeWithCTO>true</MergeWithCTO>
+      <ManifestResourceName>VSPackage</ManifestResourceName>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\config.ico" />
+    <Resource Include="Resources\update.ico" />
+    <None Include="paket.references" />
+    <None Include="source.extension.vsixmanifest" />
+    <Resource Include="Resources\Extension.ico" />
+    <Resource Include="Resources\Extension.png" />
+    <Resource Include="Resources\nuget.png" />
+    <Resource Include="Resources\package-color.ico" />
+    <Resource Include="Resources\Package.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\github.png" />
+  </ItemGroup>
+  <PropertyGroup>
+    <UseCodebase>true</UseCodebase>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(SolutionDir)\.paket\paket.targets" />
+  <ItemGroup>
+    <VSCTCompile Include="Commands\CommandTable.vsct">
+      <ResourceName>Menus.ctmenu</ResourceName>
+      <SubType>Designer</SubType>
+    </VSCTCompile>
+    <EmbeddedResource Include="Resources\NuGet.ico" />
+    <Content Include="..\..\docs\files\img\logo.png">
+      <Link>logo.png</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\..\LICENSE.txt">
+      <Link>LICENSE.txt</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Commands\PackageGui\AddPackage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="Chessie">
+          <HintPath>..\..\packages\Chessie\lib\net40\Chessie.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="FSharp.Core">
+          <HintPath>..\..\packages\FSharp.Core\lib\net45\FSharp.Core.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="MahApps.Metro">
+          <HintPath>..\..\packages\MahApps.Metro\lib\net45\MahApps.Metro.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="System.Windows.Interactivity">
+          <HintPath>..\..\packages\MahApps.Metro\lib\net45\System.Windows.Interactivity.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="Mono.Cecil">
+          <HintPath>..\..\packages\Mono.Cecil\lib\net40\Mono.Cecil.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="Mono.Cecil.Mdb">
+          <HintPath>..\..\packages\Mono.Cecil\lib\net40\Mono.Cecil.Mdb.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="Mono.Cecil.Pdb">
+          <HintPath>..\..\packages\Mono.Cecil\lib\net40\Mono.Cecil.Pdb.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="Mono.Cecil.Rocks">
+          <HintPath>..\..\packages\Mono.Cecil\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="Newtonsoft.Json">
+          <HintPath>..\..\packages\Newtonsoft.Json\lib\net45\Newtonsoft.Json.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="Paket.Core">
+          <HintPath>..\..\packages\Paket.Core\lib\net45\Paket.Core.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="ReactiveUI">
+          <HintPath>..\..\packages\reactiveui-core\lib\Net45\ReactiveUI.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="ReactiveUI.Events">
+          <HintPath>..\..\packages\reactiveui-events\lib\net45\ReactiveUI.Events.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="System.Reactive.Core">
+          <HintPath>..\..\packages\Rx-Core\lib\net45\System.Reactive.Core.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="System.Reactive.Interfaces">
+          <HintPath>..\..\packages\Rx-Interfaces\lib\net45\System.Reactive.Interfaces.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="System.Reactive.Linq">
+          <HintPath>..\..\packages\Rx-Linq\lib\net45\System.Reactive.Linq.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="System.Reactive.PlatformServices">
+          <HintPath>..\..\packages\Rx-PlatformServices\lib\net45\System.Reactive.PlatformServices.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="System.Reactive.Windows.Threading">
+          <HintPath>..\..\packages\Rx-Xaml\lib\net45\System.Reactive.Windows.Threading.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="Splat">
+          <HintPath>..\..\packages\Splat\lib\Net45\Splat.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.ComponentModelHost">
+          <HintPath>..\..\packages\VSSDK.ComponentModelHost\lib\net45\Microsoft.VisualStudio.ComponentModelHost.dll</HintPath>
+          <Private>False</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.CoreUtility">
+          <HintPath>..\..\packages\VSSDK.CoreUtility\lib\net45\Microsoft.VisualStudio.CoreUtility.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="envdte">
+          <HintPath>..\..\packages\VSSDK.DTE\lib\net20\envdte.dll</HintPath>
+          <Private>False</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="stdole">
+          <HintPath>..\..\packages\VSSDK.DTE\lib\net20\stdole.dll</HintPath>
+          <Private>False</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="envdte100">
+          <HintPath>..\..\packages\VSSDK.DTE.10\lib\net20\envdte100.dll</HintPath>
+          <Private>False</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="envdte80">
+          <HintPath>..\..\packages\VSSDK.DTE.8\lib\net20\envdte80.dll</HintPath>
+          <Private>False</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="envdte90">
+          <HintPath>..\..\packages\VSSDK.DTE.9\lib\net20\envdte90.dll</HintPath>
+          <Private>False</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="envdte90a">
+          <HintPath>..\..\packages\VSSDK.DTE.9\lib\net20\envdte90a.dll</HintPath>
+          <Private>False</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.Editor">
+          <HintPath>..\..\packages\VSSDK.Editor\lib\net45\Microsoft.VisualStudio.Editor.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.GraphModel">
+          <HintPath>..\..\packages\VSSDK.GraphModel\lib\net45\Microsoft.VisualStudio.GraphModel.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.Language.Intellisense">
+          <HintPath>..\..\packages\VSSDK.Language\lib\net45\Microsoft.VisualStudio.Language.Intellisense.dll</HintPath>
+          <Private>False</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.Language.StandardClassification">
+          <HintPath>..\..\packages\VSSDK.Language\lib\net45\Microsoft.VisualStudio.Language.StandardClassification.dll</HintPath>
+          <Private>False</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.OLE.Interop">
+          <HintPath>..\..\packages\VSSDK.OLE.Interop\lib\net20\Microsoft.VisualStudio.OLE.Interop.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.Shell.12.0">
+          <HintPath>..\..\packages\VSSDK.Shell.12\lib\net45\Microsoft.VisualStudio.Shell.12.0.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0">
+          <HintPath>..\..\packages\VSSDK.Shell.Immutable.10\lib\net40\Microsoft.VisualStudio.Shell.Immutable.10.0.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.Shell.Immutable.11.0">
+          <HintPath>..\..\packages\VSSDK.Shell.Immutable.11\lib\net45\Microsoft.VisualStudio.Shell.Immutable.11.0.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.Shell.Immutable.12.0">
+          <HintPath>..\..\packages\VSSDK.Shell.Immutable.12\lib\net45\Microsoft.VisualStudio.Shell.Immutable.12.0.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.Shell.Interop">
+          <HintPath>..\..\packages\VSSDK.Shell.Interop\lib\net20\Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0">
+          <HintPath>..\..\packages\VSSDK.Shell.Interop.10\lib\net20\Microsoft.VisualStudio.Shell.Interop.10.0.dll</HintPath>
+          <Private>False</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.Shell.Interop.11.0">
+          <HintPath>..\..\packages\VSSDK.Shell.Interop.11\lib\net20\Microsoft.VisualStudio.Shell.Interop.11.0.dll</HintPath>
+          <Private>False</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.Shell.Interop.12.0">
+          <HintPath>..\..\packages\VSSDK.Shell.Interop.12\lib\net20\Microsoft.VisualStudio.Shell.Interop.12.0.dll</HintPath>
+          <Private>False</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0">
+          <HintPath>..\..\packages\VSSDK.Shell.Interop.8\lib\net20\Microsoft.VisualStudio.Shell.Interop.8.0.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0">
+          <HintPath>..\..\packages\VSSDK.Shell.Interop.9\lib\net20\Microsoft.VisualStudio.Shell.Interop.9.0.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.Text.Data">
+          <HintPath>..\..\packages\VSSDK.Text\lib\net45\Microsoft.VisualStudio.Text.Data.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.Text.Logic">
+          <HintPath>..\..\packages\VSSDK.Text\lib\net45\Microsoft.VisualStudio.Text.Logic.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.Text.UI">
+          <HintPath>..\..\packages\VSSDK.Text\lib\net45\Microsoft.VisualStudio.Text.UI.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.Text.UI.Wpf">
+          <HintPath>..\..\packages\VSSDK.Text\lib\net45\Microsoft.VisualStudio.Text.UI.Wpf.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.TextManager.Interop">
+          <HintPath>..\..\packages\VSSDK.TextManager.Interop\lib\net20\Microsoft.VisualStudio.TextManager.Interop.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.TextManager.Interop.8.0">
+          <HintPath>..\..\packages\VSSDK.TextManager.Interop.8\lib\net20\Microsoft.VisualStudio.TextManager.Interop.8.0.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.Threading">
+          <HintPath>..\..\packages\VSSDK.Threading\lib\net45\Microsoft.VisualStudio.Threading.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Import Project="..\..\packages\Microsoft.VisualStudio.Sdk.BuildTasks.14.0\build\Microsoft.VisualStudio.Sdk.BuildTasks.14.0.targets" Condition="Exists('..\..\packages\Microsoft.VisualStudio.Sdk.BuildTasks.14.0\build\Microsoft.VisualStudio.Sdk.BuildTasks.14.0.targets')" Label="Paket" />
+</Project>
